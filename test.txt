@@ -1,0 +1,46 @@
+C++
+1. Установка необходимых пакетов
+sudo apt-get install -y libgtest-dev google-benchmark lcov cmake
+
+2. Создание структуры проекта
+mkdir -p build
+
+3. Сборка проекта
+cd build
+cmake ..
+make
+
+4. Запуск тестов и создание отчета о покрытии
+./unit_tests
+lcov --capture --directory . --output-file coverage.info --ignore-errors mismatch
+lcov --remove coverage.info '/usr/*' --output-file coverage.info
+genhtml coverage.info --output-directory coverage_report
+
+5. Запуск бенчмарков
+./benchmark_test
+
+./benchmark_test --benchmark_filter=AVL
+./benchmark_test --benchmark_filter=Array
+./benchmark_test --benchmark_filter=Queue
+./benchmark_test --benchmark_filter=Stack
+./benchmark_test --benchmark_filter=DoublyLinkedList
+./benchmark_test --benchmark_filter=HashTable
+./benchmark_test --benchmark_filter=List
+
+mkdir -p build
+cd build
+cmake ..
+make
+./unit_tests
+lcov --capture --directory . --output-file coverage.info --ignore-errors mismatch
+lcov --remove coverage.info '/usr/*' --output-file coverage.info
+genhtml coverage.info --output-directory coverage_report
+
+
+Go
+go mod init stack
+go build -o stack
+
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out -o coverage.html
+go test -bench=. -benchmem

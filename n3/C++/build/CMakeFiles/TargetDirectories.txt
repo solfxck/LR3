@@ -1,0 +1,5 @@
+/home/vboxuser/Рабочий стол/lr3/n3/C++/build/CMakeFiles/unit_tests.dir
+/home/vboxuser/Рабочий стол/lr3/n3/C++/build/CMakeFiles/benchmark_test.dir
+/home/vboxuser/Рабочий стол/lr3/n3/C++/build/CMakeFiles/test.dir
+/home/vboxuser/Рабочий стол/lr3/n3/C++/build/CMakeFiles/edit_cache.dir
+/home/vboxuser/Рабочий стол/lr3/n3/C++/build/CMakeFiles/rebuild_cache.dir
