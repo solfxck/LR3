@@ -15,7 +15,7 @@ TEST_F(DubleListTest, EmptyListTest) {
     EXPECT_EQ(list.getTail(), nullptr);
     testing::internal::CaptureStdout();
     list.display();
-    std::string output = testing::internal::GetCapturedStdout();
+    string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, "Список пуст!\n");
 }
 
@@ -58,7 +58,7 @@ TEST_F(DubleListTest, PopHeadTest) {
 TEST_F(DubleListTest, EmptyPopHeadTest) {
     testing::internal::CaptureStdout();
     list.popHead();
-    std::string output = testing::internal::GetCapturedStdout();
+    string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, "Список пуст!\n");
 }
 
@@ -75,7 +75,7 @@ TEST_F(DubleListTest, PopTailTest) {
 TEST_F(DubleListTest, EmptyPopTailTest) {
     testing::internal::CaptureStdout();
     list.popTail();
-    std::string output = testing::internal::GetCapturedStdout();
+    string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, "Список пуст!\n");
 }
 
@@ -94,7 +94,7 @@ TEST_F(DubleListTest, PopValueNotFoundTest) {
     list.pushTail("2");
     testing::internal::CaptureStdout();
     EXPECT_FALSE(list.popValue("3"));
-    std::string output = testing::internal::GetCapturedStdout();
+    string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, "");
 }
 
@@ -117,7 +117,7 @@ TEST_F(DubleListTest, SearchNonExistingTest) {
 TEST_F(DubleListTest, DisplayEmptyTest) {
     testing::internal::CaptureStdout();
     list.display();
-    std::string output = testing::internal::GetCapturedStdout();
+    string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, "Список пуст!\n");
 }
 
@@ -128,7 +128,7 @@ TEST_F(DubleListTest, DisplayTest) {
     list.pushTail("3");
     testing::internal::CaptureStdout();
     list.display();
-    std::string output = testing::internal::GetCapturedStdout();
+    string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ(output, "1 2 3 \n");
 }
 

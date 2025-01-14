@@ -158,7 +158,7 @@ public:
     }
 
     // сериализация в бинарный файл
-    void serializeBin(const std::string& filename) {
+    void serializeBin(const string& filename) {
         ofstream file(filename, ios::binary);
         if (file.is_open()) {
             int size = 0;

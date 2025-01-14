@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>stack: Go Coverage Report</title>
+		<title>queue: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,9 +55,9 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">stack/main.go (0.0%)</option>
+				<option value="file0">queue/main.go (32.7%)</option>
 				
-				<option value="file1">stack/stack.go (100.0%)</option>
+				<option value="file1">queue/queue.go (91.3%)</option>
 				
 				</select>
 			</div>
@@ -80,48 +80,43 @@ import (
         "strings"
 )
 
-func loadStackFromFile(stack *Stack, filename string) error <span class="cov0" title="0">{
+func loadQueueFromFile(queue *Queue, filename string) error <span class="cov8" title="1">{
         file, err := os.Open(filename)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">defer file.Close()
+        <span class="cov8" title="1">defer file.Close()
 
-        var values []string
         scanner := bufio.NewScanner(file)
-        for scanner.Scan() </span><span class="cov0" title="0">{
-                values = append(values, scanner.Text())
+        for scanner.Scan() </span><span class="cov8" title="1">{
+                queue.Push(scanner.Text())
         }</span>
 
-        <span class="cov0" title="0">for i := len(values) - 1; i &gt;= 0; i-- </span><span class="cov0" title="0">{
-                stack.Push(values[i])
-        }</span>
-
-        <span class="cov0" title="0">return scanner.Err()</span>
+        <span class="cov8" title="1">return scanner.Err()</span>
 }
 
-func saveStackToFile(stack *Stack, filename string) error <span class="cov0" title="0">{
+func saveQueueToFile(queue *Queue, filename string) error <span class="cov8" title="1">{
         file, err := os.Create(filename)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">defer file.Close()
+        <span class="cov8" title="1">defer file.Close()
 
         writer := bufio.NewWriter(file)
-        current := stack.GetTop()
-        for current != nil </span><span class="cov0" title="0">{
+        current := queue.GetHead()
+        for current != nil </span><span class="cov8" title="1">{
                 _, err := writer.WriteString(current.data + "\n")
                 if err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>
-                <span class="cov0" title="0">current = current.next</span>
+                <span class="cov8" title="1">current = current.next</span>
         }
 
-        <span class="cov0" title="0">return writer.Flush()</span>
+        <span class="cov8" title="1">return writer.Flush()</span>
 }
 
 func main() <span class="cov0" title="0">{
-        stack := NewStack()
+        queue := NewQueue()
         reader := bufio.NewReader(os.Stdin)
 
         for </span><span class="cov0" title="0">{
@@ -134,38 +129,38 @@ func main() <span class="cov0" title="0">{
                 }
 
                 <span class="cov0" title="0">switch parts[0] </span>{
-                case "SPUSH":<span class="cov0" title="0">
+                case "QPUSH":<span class="cov0" title="0">
                         if len(parts) &lt; 2 </span><span class="cov0" title="0">{
                                 fmt.Println("Ошибка: необходимо указать значение")
                                 continue</span>
                         }
-                        <span class="cov0" title="0">stack.Push(parts[1])
-                        fmt.Println("Элемент добавлен в стек")</span>
+                        <span class="cov0" title="0">queue.Push(parts[1])
+                        fmt.Println("Элемент добавлен в очередь")</span>
 
-                case "SPOP":<span class="cov0" title="0">
-                        stack.Pop()</span>
+                case "QPOP":<span class="cov0" title="0">
+                        queue.Pop()</span>
 
-                case "SPRINT":<span class="cov0" title="0">
-                        stack.Display()</span>
+                case "QPRINT":<span class="cov0" title="0">
+                        queue.Display()</span>
 
-                case "SLOAD":<span class="cov0" title="0">
+                case "QLOAD":<span class="cov0" title="0">
                         if len(parts) &lt; 2 </span><span class="cov0" title="0">{
                                 fmt.Println("Ошибка: необходимо указать имя файла")
                                 continue</span>
                         }
-                        <span class="cov0" title="0">err := loadStackFromFile(stack, parts[1])
+                        <span class="cov0" title="0">err := loadQueueFromFile(queue, parts[1])
                         if err != nil </span><span class="cov0" title="0">{
                                 fmt.Printf("Ошибка при загрузке файла: %v\n", err)
                         }</span> else<span class="cov0" title="0"> {
                                 fmt.Println("Данные успешно загружены из файла")
                         }</span>
 
-                case "SSAVE":<span class="cov0" title="0">
+                case "QSAVE":<span class="cov0" title="0">
                         if len(parts) &lt; 2 </span><span class="cov0" title="0">{
                                 fmt.Println("Ошибка: необходимо указать имя файла")
                                 continue</span>
                         }
-                        <span class="cov0" title="0">err := saveStackToFile(stack, parts[1])
+                        <span class="cov0" title="0">err := saveQueueToFile(queue, parts[1])
                         if err != nil </span><span class="cov0" title="0">{
                                 fmt.Printf("Ошибка при сохранении файла: %v\n", err)
                         }</span> else<span class="cov0" title="0"> {
@@ -184,64 +179,86 @@ func main() <span class="cov0" title="0">{
 		
 		<pre class="file" id="file1" style="display: none">package main
 
-// node представляет узел в стеке
+import "fmt"
+
+// Node представляет узел в очереди
 type Node struct {
-        data string // данные, хранящиеся в узле
-        next *Node  // указатель на следующий узел в стеке
+        data string
+        next *Node
 }
 
-// stack представляет структуру данных "стек"
-type Stack struct {
-        top *Node // указатель на верхний элемент стека
+// Queue представляет структуру данных очереди
+type Queue struct {
+        head *Node
+        tail *Node
 }
 
-// newStack создает новый пустой стек
-func NewStack() *Stack <span class="cov8" title="1">{
-        return &amp;Stack{
-                top: nil, // инициализация стека с пустым верхним элементом
+// NewQueue создает новую пустую очередь
+func NewQueue() *Queue <span class="cov8" title="1">{
+        return &amp;Queue{
+                head: nil,
+                tail: nil,
         }
 }</span>
 
-// push добавляет новый элемент на вершину стека
-// сложность: O(1)
-func (s *Stack) Push(value string) <span class="cov8" title="1">{
-        newNode := &amp;Node{
-                data: value, // данные нового узла
-                next: s.top, // следующий элемент — текущая вершина стека
-        }
-        s.top = newNode // обновление вершины стека
+// GetHead возвращает головной узел очереди
+func (q *Queue) GetHead() *Node <span class="cov8" title="1">{
+        return q.head
 }</span>
 
-// pop удаляет верхний элемент из стека
-// сложность: O(1)
-func (s *Stack) Pop() <span class="cov8" title="1">{
-        if s.top == nil </span><span class="cov8" title="1">{ // проверка, пуст ли стек
-                println("Стек пуст!")
-                return
+// GetTail возвращает хвостовой узел очереди
+func (q *Queue) GetTail() *Node <span class="cov0" title="0">{
+        return q.tail
+}</span>
+
+// Push добавляет новый элемент в конец очереди
+// Временная сложность: O(1)
+func (q *Queue) Push(value string) <span class="cov8" title="1">{
+        node := &amp;Node{data: value, next: nil}
+
+        if q.head == nil </span><span class="cov8" title="1">{
+                // Если очередь пуста, то и голова, и хвост указывают на новый узел
+                q.head = node
+                q.tail = node
+        }</span> else<span class="cov8" title="1"> {
+                // Добавляем новый узел в конец очереди
+                q.tail.next = node
+                q.tail = node
         }</span>
-        <span class="cov8" title="1">s.top = s.top.next</span> // перемещение вершины на следующий элемент
 }
 
-// display выводит все элементы стека
-// сложность: O(n), где n — количество элементов в стеке
-func (s *Stack) Display() <span class="cov8" title="1">{
-        if s.top == nil </span><span class="cov8" title="1">{ // проверка, пуст ли стек
-                println("Стек пуст!")
+// Pop удаляет первый элемент из очереди
+// Временная сложность: O(1)
+func (q *Queue) Pop() <span class="cov8" title="1">{
+        if q.head == nil </span><span class="cov8" title="1">{
+                fmt.Println("Очередь пуста!")
                 return
         }</span>
 
-        <span class="cov8" title="1">current := s.top // начинаем с вершины стека
+        // Перемещаем указатель головы на следующий узел
+        <span class="cov8" title="1">q.head = q.head.next
+
+        // Если после удаления очередь стала пустой
+        if q.head == nil </span><span class="cov0" title="0">{
+                q.tail = nil
+        }</span>
+}
+
+// Display выводит все элементы в очереди
+// Временная сложность: O(n)
+func (q *Queue) Display() <span class="cov8" title="1">{
+        if q.head == nil </span><span class="cov8" title="1">{
+                fmt.Println("Очередь пуста!")
+                return
+        }</span>
+
+        <span class="cov8" title="1">current := q.head
         for current != nil </span><span class="cov8" title="1">{
-                print(current.data, " ") // вывод данных текущего узла
-                current = current.next   // переход к следующему узлу
+                fmt.Printf("%s ", current.data)
+                current = current.next
         }</span>
-        <span class="cov8" title="1">println()</span> // перевод строки после вывода всех элементов
+        <span class="cov8" title="1">fmt.Println()</span>
 }
-
-// getTop возвращает верхний узел стека
-func (s *Stack) GetTop() *Node <span class="cov8" title="1">{
-        return s.top // возврат вершины стека
-}</span>
 </pre>
 		
 		</div>

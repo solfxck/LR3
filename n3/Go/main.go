@@ -7,27 +7,22 @@ import (
 	"strings"
 )
 
-func loadStackFromFile(stack *Stack, filename string) error {
+func loadQueueFromFile(queue *Queue, filename string) error {
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	var values []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		values = append(values, scanner.Text())
-	}
-
-	for i := len(values) - 1; i >= 0; i-- {
-		stack.Push(values[i])
+		queue.Push(scanner.Text())
 	}
 
 	return scanner.Err()
 }
 
-func saveStackToFile(stack *Stack, filename string) error {
+func saveQueueToFile(queue *Queue, filename string) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -35,7 +30,7 @@ func saveStackToFile(stack *Stack, filename string) error {
 	defer file.Close()
 
 	writer := bufio.NewWriter(file)
-	current := stack.GetTop()
+	current := queue.GetHead()
 	for current != nil {
 		_, err := writer.WriteString(current.data + "\n")
 		if err != nil {
@@ -48,7 +43,7 @@ func saveStackToFile(stack *Stack, filename string) error {
 }
 
 func main() {
-	stack := NewStack()
+	queue := NewQueue()
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
@@ -61,38 +56,38 @@ func main() {
 		}
 
 		switch parts[0] {
-		case "SPUSH":
+		case "QPUSH":
 			if len(parts) < 2 {
 				fmt.Println("Ошибка: необходимо указать значение")
 				continue
 			}
-			stack.Push(parts[1])
-			fmt.Println("Элемент добавлен в стек")
+			queue.Push(parts[1])
+			fmt.Println("Элемент добавлен в очередь")
 
-		case "SPOP":
-			stack.Pop()
+		case "QPOP":
+			queue.Pop()
 
-		case "SPRINT":
-			stack.Display()
+		case "QPRINT":
+			queue.Display()
 
-		case "SLOAD":
+		case "QLOAD":
 			if len(parts) < 2 {
 				fmt.Println("Ошибка: необходимо указать имя файла")
 				continue
 			}
-			err := loadStackFromFile(stack, parts[1])
+			err := loadQueueFromFile(queue, parts[1])
 			if err != nil {
 				fmt.Printf("Ошибка при загрузке файла: %v\n", err)
 			} else {
 				fmt.Println("Данные успешно загружены из файла")
 			}
 
-		case "SSAVE":
+		case "QSAVE":
 			if len(parts) < 2 {
 				fmt.Println("Ошибка: необходимо указать имя файла")
 				continue
 			}
-			err := saveStackToFile(stack, parts[1])
+			err := saveQueueToFile(queue, parts[1])
 			if err != nil {
 				fmt.Printf("Ошибка при сохранении файла: %v\n", err)
 			} else {

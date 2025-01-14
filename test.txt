@@ -38,8 +38,8 @@ genhtml coverage.info --output-directory coverage_report
 
 
 Go
-go mod init stack
-go build -o stack
+go mod init queue
+go build -o queue
 
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out -o coverage.html

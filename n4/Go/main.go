@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	stack := NewStack()
+	queue := NewQueue()
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
@@ -21,42 +21,66 @@ func main() {
 		}
 
 		switch parts[0] {
-		case "SPUSH":
+		case "QPUSH":
 			if len(parts) < 2 {
 				fmt.Println("Ошибка: необходимо указать значение")
 				continue
 			}
-			stack.Push(parts[1])
-			fmt.Println("Элемент добавлен в стек")
+			queue.Push(parts[1])
+			fmt.Println("Элемент добавлен в очередь")
 
-		case "SPOP":
-			stack.Pop()
+		case "QPOP":
+			queue.Pop()
 
-		case "SPRINT":
-			stack.Display()
+		case "QPRINT":
+			queue.Display()
 
-		case "SLOAD":
+		case "QLOAD":
 			if len(parts) < 2 {
 				fmt.Println("Ошибка: необходимо указать имя файла")
 				continue
 			}
-			err := stack.Deserialize(parts[1])
+			err := queue.Deserialize(parts[1])
 			if err != nil {
 				fmt.Printf("Ошибка при загрузке файла: %v\n", err)
 			} else {
 				fmt.Println("Данные успешно загружены из файла")
 			}
 
-		case "SSAVE":
+		case "QSAVE":
 			if len(parts) < 2 {
 				fmt.Println("Ошибка: необходимо указать имя файла")
 				continue
 			}
-			err := stack.Serialize(parts[1])
+			err := queue.Serialize(parts[1])
 			if err != nil {
 				fmt.Printf("Ошибка при сохранении файла: %v\n", err)
 			} else {
 				fmt.Println("Данные успешно сохранены в файл")
+			}
+
+		case "QLOADTEXT":
+			if len(parts) < 2 {
+				fmt.Println("Ошибка: необходимо указать имя файла")
+				continue
+			}
+			err := queue.DeserializeText(parts[1])
+			if err != nil {
+				fmt.Printf("Ошибка при загрузке текстового файла: %v\n", err)
+			} else {
+				fmt.Println("Данные успешно загружены из текстового файла")
+			}
+
+		case "QSAVETEXT":
+			if len(parts) < 2 {
+				fmt.Println("Ошибка: необходимо указать имя файла")
+				continue
+			}
+			err := queue.SerializeText(parts[1])
+			if err != nil {
+				fmt.Printf("Ошибка при сохранении в текстовый файл: %v\n", err)
+			} else {
+				fmt.Println("Данные успешно сохранены в текстовый файл")
 			}
 
 		case "EXIT":
